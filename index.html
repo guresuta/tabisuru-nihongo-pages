@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f5efe4">
+    <meta name="description" content="旅する日本語靜態教材展示站">
+    <title>旅する日本語教材庫</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="pages.css?v=20260624-2">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-brand-row">
+        <a class="brand" href="#today" aria-label="旅する日本語首頁">
+          <span class="brand-mark">旅</span>
+          <span><strong>旅する日本語</strong><small>AI 情境會話練習</small></span>
+        </a>
+      </div>
+
+      <section class="player-card" id="player" aria-labelledby="playerTitle">
+        <div class="player-heading">
+          <div>
+            <p class="section-label">LISTEN & REPEAT</p>
+            <div class="player-title-row">
+              <h2 id="playerTitle">會話播放器</h2>
+              <span class="episode-level" id="episodeLevel">--</span>
+            </div>
+          </div>
+          <a class="secondary-button static-action" id="downloadAudioButton" href="#" download aria-disabled="true">下載 MP3</a>
+        </div>
+
+        <audio id="dialogueAudio" preload="metadata"></audio>
+        <div class="audio-display">
+          <button class="play-button" id="playButton" type="button" aria-label="播放或暫停" disabled>▶</button>
+          <div class="audio-progress">
+            <div class="time-row"><span id="currentTime">00:00</span><span id="durationTime">00:00</span></div>
+            <input id="progressRange" type="range" min="0" max="1000" value="0" disabled aria-label="語音播放進度">
+          </div>
+        </div>
+
+        <div class="learning-controls">
+          <button id="backButton" type="button" disabled>−5 秒</button>
+          <div class="custom-select static-control playback-static">
+            <div class="custom-select-trigger">
+              <span class="custom-select-value" id="playbackRateDisplay">1.0×</span>
+            </div>
+          </div>
+          <button id="forwardButton" type="button" disabled>+5 秒</button>
+          <button class="loop-button" id="loopButton" type="button" disabled aria-pressed="false">A↔B</button>
+        </div>
+
+        <div class="ab-panel">
+          <button id="setAButton" type="button" disabled><span>A 起點</span><strong id="aTime">00:00</strong></button>
+          <div class="ab-line"><span id="abLine"></span></div>
+          <button id="setBButton" type="button" disabled><span>B 終點</span><strong id="bTime">--:--</strong></button>
+          <button class="reset-ab" id="resetAbButton" type="button" disabled>重設</button>
+        </div>
+        <p class="player-message" id="audioStatus">選擇教材後，MP3 語音會出現在這裡。</p>
+      </section>
+    </header>
+
+    <main>
+      <section class="hero" id="today">
+        <div class="eyebrow"><span></span> AI TRAVEL DIALOGUE</div>
+        <p class="hero-kicker">十分快速進入日本旅行情境</p>
+        <h1>聽懂旅途，<br><em>開口說日語。</em></h1>
+        <p class="hero-copy">由本機 AI 依旅行情境原創適合長度的雙人會話，再交給本機 VOICEVOX 合成日語語音。</p>
+        <div class="hero-meta">
+          <span>依情境 1-10 分鐘</span><span>雙人會話</span><span>AI 原創教材</span>
+        </div>
+      </section>
+
+      <section class="generator-card" aria-labelledby="generatorTitle">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">CREATE A JOURNEY</p>
+            <h2 id="generatorTitle">建立今天的旅遊會話</h2>
+          </div>
+        </div>
+
+        <form id="dialogueForm" class="static-form">
+          <label>
+            <span>教材清單</span>
+            <div class="custom-select static-lesson-select" id="lessonSelect">
+              <button class="custom-select-trigger" id="lessonSelectTrigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                <span class="custom-select-value" id="lessonSelectValue">正在讀取教材清單…</span>
+                <span class="custom-select-arrow">⌄</span>
+              </button>
+              <div class="custom-select-menu lesson-list" id="lessonList" role="listbox" hidden></div>
+            </div>
+          </label>
+
+          <label>
+            <span>旅遊情境</span>
+            <input id="staticTopic" type="text" value="尚未選擇教材" readonly aria-readonly="true">
+            <small class="field-hint">此頁展示的是本機已生成並發布完成的靜態教材。</small>
+          </label>
+
+          <div class="form-grid">
+            <label>
+              <span>日語程度</span>
+              <div class="custom-select static-control">
+                <div class="custom-select-trigger"><span class="custom-select-value" id="staticLevel">--</span></div>
+              </div>
+            </label>
+            <label>
+              <span>朗讀速度</span>
+              <div class="custom-select static-control">
+                <div class="custom-select-trigger"><span class="custom-select-value" id="staticVoiceSpeed">--</span></div>
+              </div>
+            </label>
+          </div>
+
+          <div class="form-grid">
+            <label>
+              <span>角色 A 聲音</span>
+              <div class="custom-select static-control">
+                <div class="custom-select-trigger"><span class="custom-select-value" id="staticSpeakerA">--</span></div>
+              </div>
+            </label>
+            <label>
+              <span>角色 B 聲音</span>
+              <div class="custom-select static-control">
+                <div class="custom-select-trigger"><span class="custom-select-value" id="staticSpeakerB">--</span></div>
+              </div>
+            </label>
+          </div>
+
+          <a class="primary-button static-primary" id="downloadTranscriptButton" href="#" download aria-disabled="true">
+            <span>下載目前教材逐字稿</span>
+            <small>STATIC PDF</small>
+          </a>
+        </form>
+
+        <div class="system-status" aria-live="polite">
+          <p><i class="ready"></i><span>AI 文本與校稿已在本機完成</span></p>
+          <p><i class="ready"></i><span>VOICEVOX 整段語音已完成</span></p>
+        </div>
+      </section>
+
+      <section class="content-section" id="dialogue">
+        <div class="section-heading">
+          <div><p class="section-label">FULL DIALOGUE</p><h2>完整會話逐句稿</h2></div>
+          <div class="transcript-actions">
+            <button class="text-toggle published-button" type="button" disabled>已發布 GitHub</button>
+            <a class="text-toggle" id="inlineAudioDownload" href="#" download aria-disabled="true">下載 MP3</a>
+            <a class="text-toggle" id="inlinePdfDownload" href="#" download aria-disabled="true">下載 PDF</a>
+            <button class="text-toggle" id="furiganaToggle" type="button" aria-pressed="true">ふりがな ON</button>
+          </div>
+        </div>
+        <p class="excerpt-note">點選任一句即可跳到該句語音。內容是 AI 原創教材，不是外部影片逐字稿。</p>
+        <div class="dialogue-list" id="dialogueList">
+          <div class="placeholder">尚未選擇教材。</div>
+        </div>
+      </section>
+
+      <section class="content-section" id="words">
+        <div class="section-heading">
+          <div><p class="section-label">TRAVEL WORDS</p><h2>情境常用單字與熟語</h2></div>
+          <span class="count-pill" id="wordCount">10–14 詞</span>
+        </div>
+        <div class="word-grid" id="wordGrid">
+          <div class="placeholder">選擇教材後，將在此顯示單字。</div>
+        </div>
+      </section>
+
+      <section class="content-section" id="highlights">
+        <div class="section-heading">
+          <div><p class="section-label">KEY EXPRESSIONS</p><h2>旅途中常用重點句</h2></div>
+          <span class="count-pill" id="phraseCount">6–8 句</span>
+        </div>
+        <div class="key-phrase-list" id="keyPhraseList">
+          <div class="placeholder">選擇教材後，將在此顯示重點句。</div>
+        </div>
+      </section>
+
+      <section class="content-section" id="examples">
+        <div class="section-heading">
+          <div><p class="section-label">MORE EXAMPLES</p><h2>可以直接換用的例句</h2></div>
+        </div>
+        <div class="example-list" id="exampleList">
+          <div class="placeholder">選擇教材後，將在此顯示延伸例句。</div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="主要導覽">
+      <a class="active" href="#today"><span>作</span>生成</a>
+      <a href="#dialogue"><span>文</span>會話</a>
+      <a href="#words"><span>単</span>單字</a>
+      <a href="#highlights"><span>句</span>重點句</a>
+    </nav>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="pages.js?v=20260624-2"></script>
+  </body>
+</html>
